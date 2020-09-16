@@ -26,7 +26,7 @@ except ImportError:  # Django < 1.10
 
 from .utils import get_last_activity, set_last_activity
 from .settings import EXPIRE_AFTER, PASSIVE_URLS, PASSIVE_URL_NAMES
-from django.http import HttpResponseRedirect, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 
 
 
