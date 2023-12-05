@@ -12,6 +12,7 @@ Make sure that it is placed **after** authentication middlewares.
 from datetime import datetime, timedelta
 
 import django
+import requests
 from django.contrib.auth import logout
 try: # Django 2.0
     from django.urls import reverse, resolve, Resolver404
@@ -75,6 +76,12 @@ class SessionSecurityMiddleware(MiddlewareMixin):
         expire_seconds = self.get_expire_seconds(request)
         if delta >= timedelta(seconds=expire_seconds):
             sso_login_url = request.session.get('sso_login_url', None)
+            logout_plugins = request.session.get('logged_in_plugins', [])  
+            session_id = request.session.session_key
+            if logout_plugins:
+                for url in logout_plugins:
+                    url = url+'?session_id='+str(session_id)
+                    requests.get(url)
             logout(request)
             if sso_login_url:
                 return HttpResponseRedirect("%s" % reverse('ssologinurl', kwargs={'sso_url': sso_login_url}))
