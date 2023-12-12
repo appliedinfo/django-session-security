@@ -81,7 +81,10 @@ class SessionSecurityMiddleware(MiddlewareMixin):
             if logout_plugins:
                 for url in logout_plugins:
                     url = url+'?session_id='+str(session_id)
-                    requests.get(url)
+                    try:
+                        requests.get(url)
+                    except Exception as E:
+                        pass
             logout(request)
             if sso_login_url:
                 return HttpResponseRedirect("%s" % reverse('ssologinurl', kwargs={'sso_url': sso_login_url}))
