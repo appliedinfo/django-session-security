@@ -77,7 +77,8 @@ class SessionSecurityMiddleware(MiddlewareMixin):
             sso_login_url = request.session.get('sso_login_url', None)
             logout(request)
             if sso_login_url:
-                return HttpResponseRedirect("%s" % reverse('ssologinurl', kwargs={'sso_url': sso_login_url}))
+                url = "https://" + request.get_host() + '/accounts/sso/logout/' + sso_login_url
+                return HttpResponseRedirect(url)
         elif (request.path == reverse('session_security_ping') and
                 'idleFor' in request.GET):
             self.update_last_activity(request, now)
